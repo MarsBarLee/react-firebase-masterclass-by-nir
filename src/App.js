@@ -1,24 +1,36 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import AuthProvider from "./providers/AuthProvider"
+import {Switch, Router} from 'react-route-dom';
+
+function routes (currentUser) {
+  if(!currentUser) {
+    return (
+      <Switch>
+        <Route path="/events"><EventList></EventList></Route>
+        <Route path="/login"><Login></Login></Route>
+        <Route path="/events/:eventId"><EventDetails></EventDetails></Route>
+        <Redirect from="*" to="/events" />
+      </Switch>
+    )
+  }
+
+  return (
+    <Switch>
+      <Route path="/events"><EventList></EventList></Route>
+      <Route path="/events/:eventId"><EventDetails></EventDetails></Route>
+      <Redirect from="*" to="/events" />
+  </Switch>
+  )
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AuthProvider>
+        {routes}
+      </AuthProvider>
     </div>
   );
 }
